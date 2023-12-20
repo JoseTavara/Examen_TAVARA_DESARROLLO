@@ -75,9 +75,7 @@ public class DenunciaServiceImpl implements DenunciaService {
     public Denuncia create(Denuncia denuncia) {
         try {
             DenunciaValidator.save(denuncia);
-            if (repository.findByDni(denuncia.getDni()) != null) {
-                throw new ValidateServiceException("Ya existe una denuncia con ese DNI" + denuncia.getDni());
-            }
+           
             Denuncia registro = repository.save(denuncia);
             return registro;
         } catch (ValidateServiceException | NoDataFoundException e) {
@@ -95,10 +93,7 @@ public class DenunciaServiceImpl implements DenunciaService {
         try {
             DenunciaValidator.save(denuncia);
             Denuncia registro = repository.findById(denuncia.getId()).orElseThrow(() -> new NoDataFoundException("NO existe ese registro con ese ID"));
-            Denuncia registroD = repository.findByDni(denuncia.getDni());
-            if (registroD != null) {
-                throw new ValidateServiceException("Ya existe una denuncia con ese DNI" + denuncia.getDni());
-            }
+            
             registro.setDni(denuncia.getDni());
             registro.setFecha(denuncia.getFecha());
             registro.setTitulo(denuncia.getTitulo());

@@ -58,6 +58,20 @@ public class DenunciaController {
         return new WrapperResponse<DenunciaDTO>(true, "success", denunciaDTO).createRespose(HttpStatus.OK);
     }
 
+    @GetMapping("/dni/{dni}")
+    public ResponseEntity<WrapperResponse<List<DenunciaDTO>>> findByDni(@PathVariable(name = "dni") String dni) {
+        List<Denuncia> denuncias = service.findByDni(dni, null);
+
+        if (denuncias.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                 .body(new WrapperResponse<>(false, "No se encontraron denuncias para el DNI: " + dni, null));
+        }
+
+        List<DenunciaDTO> denunciasDTO = converter.fromEntity(denuncias);
+        return ResponseEntity.status(HttpStatus.OK)
+                             .body(new WrapperResponse<>(true, "success", denunciasDTO));
+    }
+    
     @PostMapping
     public ResponseEntity<DenunciaDTO> create(@RequestBody DenunciaDTO denunciaDTO) {
         Denuncia registro = service.create(converter.fromDTO(denunciaDTO));
